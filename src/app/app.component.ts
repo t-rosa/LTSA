@@ -25,6 +25,17 @@ export class AppComponent {
     return 'Grand';
   });
 
+  color = computed(() => {
+    if (this.life() <= 15) {
+      return 'bg-green-500';
+    }
+
+    if (this.life() > 15 && this.life() < 25) {
+      return 'bg-yellow-500';
+    }
+
+    return 'bg-red-500';
+  });
   incrementLife() {
     this.life.update((life) => life + 1);
   }
