@@ -3,6 +3,5 @@
 <p>{{ life() }}</p>
 <p>{{ size() }}</p>
 
-<!-- zone.js se charge de rerender -->
-<button (click)="incrementLife()">Augmenter</button>
-<button (click)="decrementLife()">Réduire</button>
+<button (click)="incrementLife()" [disabled]="life() >= 30">Augmenter</button>
+<button (click)="decrementLife()" [disabled]="life() <= 15">Réduire</button>
