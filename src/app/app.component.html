@@ -1,7 +1,8 @@
-<h1 [className]="color()">Pokédex</h1>
-<h2>{{ name }}</h2>
-<p>{{ life() }}</p>
-<p>{{ size() }}</p>
-
-<button (click)="incrementLife()" [disabled]="life() >= 30">Augmenter</button>
-<button (click)="decrementLife()" [disabled]="life() <= 15">Réduire</button>
+<ul class="grid grid-cols-4 gap-3 max-w-4xl mx-auto">
+  @for (pokemon of pokemons; track $index) {
+  <li class="border px-3 py-6 grid place-items-center">
+    <h2 class="font-medium text-xl">{{ pokemon.name }}</h2>
+    <img src="{{ pokemon.picture }}" alt="{{ pokemon.name }}" />
+  </li>
+  }
+</ul>
