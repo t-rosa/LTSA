@@ -1,9 +1,8 @@
 <h1>Pokédex</h1>
 <h2>{{ name }}</h2>
-<p>{{ life }}</p>
+<p>{{ life() }}</p>
+<p>{{ size() }}</p>
 
 <!-- zone.js se charge de rerender -->
 <button (click)="incrementLife()">Augmenter</button>
 <button (click)="decrementLife()">Réduire</button>
-
-<al-counter />
