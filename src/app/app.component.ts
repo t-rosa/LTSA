@@ -13,4 +13,15 @@ import { PokemonComponent } from './pokemon/pokemon/pokemon.component';
 })
 export class AppComponent {
   pokemons: Signal<Pokemon[]> = signal(POKEMON_LIST);
+  size(pokemon: Pokemon) {
+    if (pokemon.life <= 15) {
+      return 'Petit';
+    }
+
+    if (pokemon.life >= 25) {
+      return 'Grand';
+    }
+
+    return 'Moyen';
+  }
 }
