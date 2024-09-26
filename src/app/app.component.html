@@ -1,5 +1,5 @@
 <ul class="grid grid-cols-4 gap-3 max-w-4xl mx-auto">
-  @for (pokemon of pokemons; track $index) {
+  @for (pokemon of pokemons(); track $index) {
   <li class="border px-3 py-6 grid place-items-center">
     <h2 class="font-medium text-xl">{{ pokemon.name }}</h2>
     <img src="{{ pokemon.picture }}" alt="{{ pokemon.name }}" />

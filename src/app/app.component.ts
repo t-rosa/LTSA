@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Pokemon } from './pokemon/pokemon/pokemon.model';
 import { POKEMON_LIST } from './pokemon/pokemon/pokemons.data';
@@ -12,5 +12,5 @@ import { PokemonComponent } from './pokemon/pokemon/pokemon.component';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  pokemons: Pokemon[] = POKEMON_LIST;
+  pokemons: Signal<Pokemon[]> = signal(POKEMON_LIST);
 }
