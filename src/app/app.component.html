@@ -3,6 +3,10 @@
   <li class="border px-3 py-6 grid place-items-center">
     <h2 class="font-medium text-xl">{{ pokemon.name }}</h2>
     <img src="{{ pokemon.picture }}" alt="{{ pokemon.name }}" />
+    <p>
+      Taille : @if (pokemon.life <= 15) { Petit } @else if (pokemon.life >= 25)
+      { Grand } @else { Moyen }
+    </p>
   </li>
   }
 </ul>
