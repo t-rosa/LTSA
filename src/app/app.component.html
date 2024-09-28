@@ -5,11 +5,8 @@
       @for (region of regionsSignal(); track $index) {
       <li>
         <button
-          data-selected="false"
-          [className]="
-            selectedRegionSignal().name === region.name ? 'bg-red-500' : ''
-          "
-          (click)="selectRegionByName(region.name)"
+          class="hover:underline"
+          (click)="this.regionService.selectRegionByName(region.name)"
         >
           {{ region.name }}
         </button>

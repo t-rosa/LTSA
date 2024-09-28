@@ -4,7 +4,6 @@ import {
   inject,
   OnDestroy,
   OnInit,
-  signal,
   WritableSignal,
 } from '@angular/core';
 import { Subscription, tap } from 'rxjs';
@@ -18,14 +17,12 @@ import { Region, RegionService } from './region/region.service';
   imports: [CommonModule],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private regionService = inject(RegionService);
+  regionService = inject(RegionService);
   private subscription = new Subscription();
 
-  regionsSignal: WritableSignal<Region[]> = signal([]);
-  selectedRegionSignal: WritableSignal<Region> = signal({
-    name: 'N/A',
-    code: 'N/A',
-  });
+  regionsSignal: WritableSignal<Region[]> = this.regionService.regionsSignal;
+  selectedRegionSignal: WritableSignal<Region> =
+    this.regionService.selectedRegionSignal;
 
   ngOnInit(): void {
     this.subscription = this.regionService
@@ -36,15 +33,5 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  selectRegionByName(name: string) {
-    const newRegion = this.regionsSignal().find(
-      (region) => region.name === name
-    );
-
-    if (!newRegion) return;
-
-    this.selectedRegionSignal.set(newRegion);
   }
 }
