@@ -2,7 +2,7 @@
   <section>
     <h2>Regions</h2>
     <ul>
-      @for (region of regionsSignal(); track $index) {
+      @for (region of regions(); track $index) {
       <li>
         <button
           class="hover:underline"
@@ -15,12 +15,20 @@
     </ul>
   </section>
   <aside>
-    <h2>Départements</h2>
-    @if (selectedRegionSignal().name !== "N/A") {
-    <p>{{ selectedRegionSignal().name }}</p>
-    <p>{{ selectedRegionSignal().code }}</p>
+    <h2>Région</h2>
+    @if (selectedRegion().name !== "N/A") {
+    <p>{{ selectedRegion().name }}</p>
+    <p>{{ selectedRegion().code }}</p>
     }@else {
     <p>Sélectionnez une région</p>
+    }
+    <h3>Départements de la région</h3>
+    @for (department of regionDepartments(); track $index) {
+    <li>
+      <button class="hover:underline">
+        {{ department.name }}
+      </button>
+    </li>
     }
   </aside>
 </div>

@@ -19,26 +19,24 @@ export class RegionService {
   private URL = 'https://geo.api.gouv.fr/regions?fields=nom,code';
   private http = inject(HttpClient);
 
-  regionsSignal: WritableSignal<Region[]> = signal([]);
-  selectedRegionSignal: WritableSignal<Region> = signal({
+  regions: WritableSignal<Region[]> = signal([]);
+  selectedRegion: WritableSignal<Region> = signal({
     name: 'N/A',
     code: 'N/A',
   });
 
   selectRegionByName(name: string) {
-    const newRegion = this.regionsSignal().find(
-      (region) => region.name === name
-    );
+    const newRegion = this.regions().find((region) => region.name === name);
 
     if (!newRegion) return;
 
-    this.selectedRegionSignal.set(newRegion);
+    this.selectedRegion.set(newRegion);
   }
 
   getRegions(): Observable<Region[]> {
     return this.http.get<RegionDTO[]>(this.URL).pipe(
       map((data) => this.mapToRegion(data)),
-      tap((data) => this.regionsSignal.set(data))
+      tap((data) => this.regions.set(data))
     );
   }
 

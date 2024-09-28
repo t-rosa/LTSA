@@ -1,17 +1,22 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import {
+  effect,
+  inject,
+  Injectable,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { RegionService } from '../region/region.service';
 
 export interface Department {
   name: string;
   code: string;
-  regionCode: string;
 }
 
 export interface DepartmentDTO {
   nom: string;
   code: string;
-  codeRegion: string;
 }
 
 @Injectable({
@@ -19,12 +24,27 @@ export interface DepartmentDTO {
 })
 export class DepartmentService {
   private http = inject(HttpClient);
-  private URL = '';
-  depratmentsSignal: WritableSignal<Department[]> = signal([]);
+  private regionService = inject(RegionService);
+  private BASE_URL = 'https://geo.api.gouv.fr/regions';
+  private selectedRegion = this.regionService.selectedRegion;
 
-  getDepartmentsByRegionCode(regionCode: string): Observable<Department[]> {
+  regionDepartments: WritableSignal<Department[]> = signal([]);
+
+  private departmentsEffect = effect(() => {
+    if (this.selectedRegion().code === 'N/A') return;
+    this.getDepartmentsByRegionCode().subscribe((departments) => {
+      console.log(departments);
+      this.regionDepartments.set(departments);
+    });
+  });
+
+  private getDepartmentsByRegionCode(): Observable<Department[]> {
     return this.http
-      .get<DepartmentDTO[]>(this.URL)
+      .get<DepartmentDTO[]>(
+        `${this.BASE_URL}/${
+          this.selectedRegion().code
+        }/departements?fields=nom,code`
+      )
       .pipe(map((data) => this.mapToDepartment(data)));
   }
 
@@ -35,7 +55,6 @@ export class DepartmentService {
       departements.push({
         name: department.nom,
         code: department.code,
-        regionCode: department.codeRegion,
       });
     }
 
