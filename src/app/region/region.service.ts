@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, WritableSignal, inject, signal } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { map, Observable, tap } from 'rxjs';
 
 export interface Region {
   name: string;
@@ -20,7 +20,6 @@ export class RegionService {
   private http = inject(HttpClient);
 
   regionsSignal: WritableSignal<Region[]> = signal([]);
-
   selectedRegionSignal: WritableSignal<Region> = signal({
     name: 'N/A',
     code: 'N/A',
@@ -37,9 +36,10 @@ export class RegionService {
   }
 
   getRegions(): Observable<Region[]> {
-    return this.http
-      .get<RegionDTO[]>(this.URL)
-      .pipe(map((data) => this.mapToRegion(data)));
+    return this.http.get<RegionDTO[]>(this.URL).pipe(
+      map((data) => this.mapToRegion(data)),
+      tap((data) => this.regionsSignal.set(data))
+    );
   }
 
   private mapToRegion(data: RegionDTO[]): Region[] {

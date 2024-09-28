@@ -1,12 +1,12 @@
 <div class="grid grid-cols-2">
   <section>
-    <h2>Master</h2>
+    <h2>Regions</h2>
     <ul>
       @for (region of regionsSignal(); track $index) {
       <li>
         <button
           class="hover:underline"
-          (click)="this.regionService.selectRegionByName(region.name)"
+          (click)="this.selectRegionByName(region.name)"
         >
           {{ region.name }}
         </button>
@@ -15,7 +15,7 @@
     </ul>
   </section>
   <aside>
-    <h2>Details</h2>
+    <h2>Départements</h2>
     @if (selectedRegionSignal().name !== "N/A") {
     <p>{{ selectedRegionSignal().name }}</p>
     <p>{{ selectedRegionSignal().code }}</p>

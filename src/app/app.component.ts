@@ -6,8 +6,8 @@ import {
   OnInit,
   WritableSignal,
 } from '@angular/core';
-import { Subscription, tap } from 'rxjs';
 import { Region, RegionService } from './region/region.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'al-root',
@@ -17,18 +17,18 @@ import { Region, RegionService } from './region/region.service';
   imports: [CommonModule],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  regionService = inject(RegionService);
-  private subscription = new Subscription();
+  private regionService = inject(RegionService);
+  private regions$ = this.regionService.getRegions();
+  private subscription!: Subscription;
 
   regionsSignal: WritableSignal<Region[]> = this.regionService.regionsSignal;
   selectedRegionSignal: WritableSignal<Region> =
     this.regionService.selectedRegionSignal;
 
+  selectRegionByName = this.regionService.selectRegionByName;
+
   ngOnInit(): void {
-    this.subscription = this.regionService
-      .getRegions()
-      .pipe(tap((regions) => this.regionsSignal.set(regions)))
-      .subscribe();
+    this.subscription = this.regions$.subscribe();
   }
 
   ngOnDestroy(): void {
