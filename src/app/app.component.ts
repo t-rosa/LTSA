@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription, tap } from 'rxjs';
 import { DepartmentService } from './department/department.service';
@@ -26,8 +19,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private regionSubscription!: Subscription;
 
   regionsFilterControl = new FormControl('');
-
-  filterBy: WritableSignal<string> = signal('');
 
   regions: Region[] = [];
   regionsSignal = this.regionService.regions;
