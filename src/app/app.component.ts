@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
+import { tap } from 'rxjs';
 import { Region, RegionService } from './region/region.service';
 
 @Component({
@@ -12,9 +18,12 @@ import { Region, RegionService } from './region/region.service';
 })
 export class AppComponent implements OnInit {
   private regionService = inject(RegionService);
-  regions$: Observable<Region[]> = new Observable<Region[]>();
+  regionsSignal: WritableSignal<Region[]> = signal([]);
 
   ngOnInit(): void {
-    this.regions$ = this.regionService.getRegions();
+    this.regionService
+      .getRegions()
+      .pipe(tap((data) => this.regionsSignal.set(data)))
+      .subscribe();
   }
 }

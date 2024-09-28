@@ -1,5 +1,10 @@
 <ul class="grid grid-cols-4 gap-3 max-w-4xl mx-auto">
   {{
-    this.regions$ | async | json
+    regionsSignal() | json
   }}
+  @for (region of regionsSignal(); track $index) {
+  <p>{{ region.name }}</p>
+  } @empty {
+  <p>Aucune région</p>
+  }
 </ul>
