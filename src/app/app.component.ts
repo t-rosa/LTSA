@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   inject,
@@ -7,8 +6,9 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { Subscription, tap } from 'rxjs';
 import { Region, RegionService } from './region/region.service';
+import { Subscription, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'al-root',
@@ -20,12 +20,12 @@ import { Region, RegionService } from './region/region.service';
 export class AppComponent implements OnInit, OnDestroy {
   private regionService = inject(RegionService);
   regionsSignal: WritableSignal<Region[]> = signal([]);
-  subscription: Subscription = new Subscription();
+  private subscription = new Subscription();
 
   ngOnInit(): void {
     this.subscription = this.regionService
       .getRegions()
-      .pipe(tap((data) => this.regionsSignal.set(data)))
+      .pipe(tap((regions) => this.regionsSignal.set(regions)))
       .subscribe();
   }
 

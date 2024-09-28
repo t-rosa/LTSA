@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 export interface Region {
@@ -22,19 +22,17 @@ export class RegionService {
   getRegions(): Observable<Region[]> {
     return this.http
       .get<RegionDTO[]>(this.URL)
-      .pipe(map((regions) => this.mapToRegion(regions)));
+      .pipe(map((data) => this.mapToRegion(data)));
   }
 
   mapToRegion(data: RegionDTO[]): Region[] {
     const regions: Region[] = [];
 
-    for (const element of data) {
-      const region: Region = {
-        name: element.nom,
-        code: element.code,
-      };
-
-      regions.push(region);
+    for (const region of data) {
+      regions.push({
+        name: region.nom,
+        code: region.code,
+      });
     }
 
     return regions;
