@@ -6,12 +6,11 @@
       <input
         class="border px-3 py-1"
         type="text"
-        [ngModel]="filterBy()"
-        (ngModelChange)="filterBy.set($event)"
+        [formControl]="regionsFilterControl"
       />
     </div>
     <ul>
-      @for (region of regions; track $index) {
+      @for (region of regionsSignal(); track $index) {
       <li>
         <button
           class="hover:underline"
