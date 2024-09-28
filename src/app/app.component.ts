@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   inject,
+  OnDestroy,
   OnInit,
   signal,
   WritableSignal,
 } from '@angular/core';
-import { tap } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { Region, RegionService } from './region/region.service';
 
 @Component({
@@ -16,14 +17,19 @@ import { Region, RegionService } from './region/region.service';
   standalone: true,
   imports: [CommonModule],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   private regionService = inject(RegionService);
   regionsSignal: WritableSignal<Region[]> = signal([]);
+  subscription: Subscription = new Subscription();
 
   ngOnInit(): void {
-    this.regionService
+    this.subscription = this.regionService
       .getRegions()
       .pipe(tap((data) => this.regionsSignal.set(data)))
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
