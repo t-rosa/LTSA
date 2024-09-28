@@ -1,6 +1,29 @@
-{{ regionsSignal() | json }}
-<ul class="grid grid-cols-4 gap-3 max-w-4xl mx-auto">
-  @for (region of regionsSignal(); track $index) {
-  <p>{{ region.name }}</p>
-  }
-</ul>
+<div class="grid grid-cols-2">
+  <section>
+    <h2>Master</h2>
+    <ul>
+      @for (region of regionsSignal(); track $index) {
+      <li>
+        <button
+          data-selected="false"
+          [className]="
+            selectedRegionSignal().name === region.name ? 'bg-red-500' : ''
+          "
+          (click)="selectRegionByName(region.name)"
+        >
+          {{ region.name }}
+        </button>
+      </li>
+      }
+    </ul>
+  </section>
+  <aside>
+    <h2>Details</h2>
+    @if (selectedRegionSignal().name !== "N/A") {
+    <p>{{ selectedRegionSignal().name }}</p>
+    <p>{{ selectedRegionSignal().code }}</p>
+    }@else {
+    <p>Sélectionnez une région</p>
+    }
+  </aside>
+</div>

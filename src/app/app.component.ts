@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   inject,
@@ -6,9 +7,8 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { Region, RegionService } from './region/region.service';
 import { Subscription, tap } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { Region, RegionService } from './region/region.service';
 
 @Component({
   selector: 'al-root',
@@ -19,8 +19,13 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private regionService = inject(RegionService);
-  regionsSignal: WritableSignal<Region[]> = signal([]);
   private subscription = new Subscription();
+
+  regionsSignal: WritableSignal<Region[]> = signal([]);
+  selectedRegionSignal: WritableSignal<Region> = signal({
+    name: 'N/A',
+    code: 'N/A',
+  });
 
   ngOnInit(): void {
     this.subscription = this.regionService
@@ -31,5 +36,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  selectRegionByName(name: string) {
+    const newRegion = this.regionsSignal().find(
+      (region) => region.name === name
+    );
+
+    if (!newRegion) return;
+
+    this.selectedRegionSignal.set(newRegion);
   }
 }
