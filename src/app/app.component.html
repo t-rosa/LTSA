@@ -1,8 +1,17 @@
 <div class="grid grid-cols-2">
   <section>
     <h2>Regions</h2>
+    <div>
+      <p>Filtrer par région:</p>
+      <input
+        class="border px-3 py-1"
+        type="text"
+        [ngModel]="filterBy()"
+        (ngModelChange)="filterBy.set($event)"
+      />
+    </div>
     <ul>
-      @for (region of regions(); track $index) {
+      @for (region of regions; track $index) {
       <li>
         <button
           class="hover:underline"
@@ -15,7 +24,8 @@
     </ul>
   </section>
   <aside>
-    <h2>Région</h2>
+    <h2>Départements</h2>
+
     @if (selectedRegion().name !== "N/A") {
     <p>{{ selectedRegion().name }}</p>
     <p>{{ selectedRegion().code }}</p>

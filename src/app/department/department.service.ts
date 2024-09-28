@@ -33,7 +33,6 @@ export class DepartmentService {
   private departmentsEffect = effect(() => {
     if (this.selectedRegion().code === 'N/A') return;
     this.getDepartmentsByRegionCode().subscribe((departments) => {
-      console.log(departments);
       this.regionDepartments.set(departments);
     });
   });
