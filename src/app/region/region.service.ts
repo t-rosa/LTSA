@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 export interface Region {
   name: string;
@@ -16,31 +17,26 @@ export interface RegionDTO {
   providedIn: 'root',
 })
 export class RegionService {
-  private URL = 'https://geo.api.gouv.fr/regions?fields=nom,code';
-  private http = inject(HttpClient);
+  readonly #URL = 'https://geo.api.gouv.fr/regions?fields=nom,code';
+  readonly #http = inject(HttpClient);
 
-  regions: WritableSignal<Region[]> = signal([]);
-  selectedRegion: WritableSignal<Region> = signal({
-    name: 'N/A',
-    code: 'N/A',
-  });
+  readonly regions = signal<Region[]>([]);
+  readonly error = signal<string | null>(null);
 
-  selectRegionByName(name: string) {
-    const newRegion = this.regions().find((region) => region.name === name);
-
-    if (!newRegion) return;
-
-    this.selectedRegion.set(newRegion);
+  loadRegions() {
+    this.#http
+      .get<RegionDTO[]>(this.#URL)
+      .pipe(
+        map((data) => this.#mapToRegion(data)),
+        takeUntilDestroyed()
+      )
+      .subscribe({
+        next: (regions) => this.regions.set(regions),
+        error: (error) => this.error.set(error.message),
+      });
   }
 
-  getRegions(): Observable<Region[]> {
-    return this.http.get<RegionDTO[]>(this.URL).pipe(
-      map((data) => this.mapToRegion(data)),
-      tap((data) => this.regions.set(data))
-    );
-  }
-
-  private mapToRegion(data: RegionDTO[]): Region[] {
+  #mapToRegion(data: RegionDTO[]): Region[] {
     const regions: Region[] = [];
 
     for (const region of data) {

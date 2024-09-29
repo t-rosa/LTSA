@@ -1,43 +1,14 @@
 <div class="grid grid-cols-2">
   <section>
     <h2>Regions</h2>
-    <div>
-      <p>Filtrer par région:</p>
-      <input
-        class="border px-3 py-1"
-        type="text"
-        [formControl]="regionsFilterControl"
-      />
-    </div>
     <ul>
-      @for (region of regionsSignal(); track $index) {
+      @for (region of this.service.regions(); track $index) {
       <li>
-        <button
-          class="hover:underline"
-          (click)="this.selectRegionByName(region.name)"
-        >
+        <button class="hover:underline">
           {{ region.name }}
         </button>
       </li>
       }
     </ul>
   </section>
-  <aside>
-    <h2>Départements</h2>
-
-    @if (selectedRegion().name !== "N/A") {
-    <p>{{ selectedRegion().name }}</p>
-    <p>{{ selectedRegion().code }}</p>
-    }@else {
-    <p>Sélectionnez une région</p>
-    }
-    <h3>Départements de la région</h3>
-    @for (department of regionDepartments(); track $index) {
-    <li>
-      <button class="hover:underline">
-        {{ department.name }}
-      </button>
-    </li>
-    }
-  </aside>
 </div>
