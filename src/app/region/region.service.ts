@@ -30,25 +30,19 @@ export class RegionService {
   readonly #URL = 'https://geo.api.gouv.fr/regions';
   readonly #http = inject(HttpClient);
 
-  private readonly selectedRegion = new Subject<Region>();
-  private readonly selectedRegion$ = this.selectedRegion.asObservable();
+  private readonly regionSelected$ = new Subject<Region>();
 
   handleSelectRegion(region: Region) {
-    this.selectedRegion.next(region);
+    this.regionSelected$.next(region);
   }
 
-  private readonly departments$ = this.selectedRegion$.pipe(
+  private readonly departments$ = this.regionSelected$.pipe(
     filter((region) => region !== null),
     switchMap((region) =>
       this.loadDepartmentsByRegion(region).pipe(catchError(this.handleError))
     ),
     map(this.mapToDepartment)
   );
-
-  private handleError(error: unknown) {
-    console.log('Il y a eu une erreur...', error);
-    return of([]);
-  }
 
   private loadDepartmentsByRegion(region: Region) {
     return this.#http.get<DepartmentDTO[]>(
@@ -57,6 +51,11 @@ export class RegionService {
   }
 
   readonly departements = toSignal(this.departments$, { initialValue: [] });
+
+  private handleError(error: unknown) {
+    console.log('Il y a eu une erreur...', error);
+    return of([]);
+  }
 
   private readonly regions$ = this.#http
     .get<RegionDTO[]>(this.#URL + '?fields=nom,code')
