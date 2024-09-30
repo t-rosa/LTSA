@@ -10,8 +10,4 @@ import { RegionService } from './region/region.service';
 })
 export class AppComponent {
   readonly service = inject(RegionService);
-
-  constructor() {
-    this.service.loadRegions();
-  }
 }
