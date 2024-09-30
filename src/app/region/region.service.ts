@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, filter, map, of, switchMap } from 'rxjs';
 
 export interface Department {
   name: string;
@@ -36,17 +36,16 @@ export class RegionService {
   }
 
   private readonly departments$ = toObservable(this.#selectedRegion).pipe(
+    filter((region) => region !== null),
     switchMap((region) => this.#loadDepartmentsByRegion(region)),
     catchError((err) => {
-      console.error('Il y a eu une érreur...', err);
+      console.error('Il y a eu une erreur...', err);
       return of([]);
     }),
     map(this.#mapToDepartment)
   );
 
-  #loadDepartmentsByRegion(region: Region | null) {
-    if (!region) return of([]);
-
+  #loadDepartmentsByRegion(region: Region) {
     return this.#http.get<DepartmentDTO[]>(
       this.#URL + '/' + region.code + '/departements?fields=nom,code'
     );
