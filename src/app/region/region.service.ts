@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, filter, map, of, switchMap } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, filter, map, of, Subject, switchMap } from 'rxjs';
 
 export interface Department {
   name: string;
@@ -30,52 +30,51 @@ export class RegionService {
   readonly #URL = 'https://geo.api.gouv.fr/regions';
   readonly #http = inject(HttpClient);
 
-  readonly #selectedRegion = signal<Region | null>(null);
-  selectRegion(selectedRegion: Region) {
-    this.#selectedRegion.set(selectedRegion);
+  private readonly selectedRegion = new Subject<Region>();
+  private readonly selectedRegion$ = this.selectedRegion.asObservable();
+
+  handleSelectRegion(region: Region) {
+    this.selectedRegion.next(region);
   }
 
-  private readonly departments$ = toObservable(this.#selectedRegion).pipe(
+  private readonly departments$ = this.selectedRegion$.pipe(
     filter((region) => region !== null),
-    switchMap((region) => this.#loadDepartmentsByRegion(region)),
-    catchError((err) => {
-      console.error('Il y a eu une erreur...', err);
-      return of([]);
-    }),
-    map(this.#mapToDepartment)
+    switchMap((region) =>
+      this.loadDepartmentsByRegion(region).pipe(catchError(this.handleError))
+    ),
+    map(this.mapToDepartment)
   );
 
-  #loadDepartmentsByRegion(region: Region) {
+  private handleError(error: unknown) {
+    console.log('Il y a eu une erreur...', error);
+    return of([]);
+  }
+
+  private loadDepartmentsByRegion(region: Region) {
     return this.#http.get<DepartmentDTO[]>(
       this.#URL + '/' + region.code + '/departements?fields=nom,code'
     );
-  }
-
-  #mapToDepartment(departments: DepartmentDTO[]): Department[] {
-    return departments.map((depratment) => ({
-      name: depratment.nom,
-      code: depratment.code,
-    }));
   }
 
   readonly departements = toSignal(this.departments$, { initialValue: [] });
 
   private readonly regions$ = this.#http
     .get<RegionDTO[]>(this.#URL + '?fields=nom,code')
-    .pipe(
-      map(this.#mapToRegion),
-      catchError((err) => {
-        console.error('Il y a eu une érreur...', err);
-        return of([]);
-      })
-    );
+    .pipe(map(this.mapToRegion), catchError(this.handleError));
 
   readonly regions = toSignal(this.regions$, { initialValue: [] });
 
-  #mapToRegion(regions: RegionDTO[]): Region[] {
+  private mapToRegion(regions: RegionDTO[]): Region[] {
     return regions.map((region) => ({
       name: region.nom,
       code: region.code,
+    }));
+  }
+
+  private mapToDepartment(departments: DepartmentDTO[]): Department[] {
+    return departments.map((depratment) => ({
+      name: depratment.nom,
+      code: depratment.code,
     }));
   }
 }
