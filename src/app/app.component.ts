@@ -1,13 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { RegionService } from './region/region.service';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'al-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  template: '<router-outlet/>',
   standalone: true,
-  imports: [],
+  imports: [RouterOutlet],
 })
-export class AppComponent {
-  readonly service = inject(RegionService);
-}
+export class AppComponent {}
