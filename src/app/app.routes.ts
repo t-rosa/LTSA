@@ -8,12 +8,12 @@ export const routes: Routes = [
   },
   {
     path: 'regions',
-    loadComponent: () => import('./routes/regions/regions.route'),
+    loadComponent: () => import('./routes/regions/region-list.component'),
     children: [
       {
         path: ':code',
         loadComponent: () =>
-          import('./routes/regions/departements/departements.route'),
+          import('./routes/regions/departements/departement-list.component'),
       },
     ],
   },

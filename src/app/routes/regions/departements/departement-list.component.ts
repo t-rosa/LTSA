@@ -1,19 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
-import { Departement } from './departement.service';
+import { Component, inject, Input } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Departement, DepartementService } from './departement.service';
 
 @Component({
-  selector: 'al-departement-list',
   standalone: true,
-  imports: [CommonModule],
   template: `
     <ul>
-      @for (departement of this.departements(); track departement.code) {
+      @for (departement of this.departements$ | async; track departement.code) {
       <li>{{ departement.nom }} - {{ departement.code }}</li>
       }
     </ul>
   `,
+  imports: [CommonModule],
 })
-export class DepartementListComponent {
-  departements = input<Departement[] | null>([]);
+export default class DepartementListComponent {
+  readonly service = inject(DepartementService);
+
+  @Input()
+  set code(regionCode: string) {
+    this.departements$ = this.service.loadDepartementsByRegion(regionCode);
+  }
+
+  departements$!: Observable<Departement[]>;
 }
