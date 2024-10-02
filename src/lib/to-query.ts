@@ -8,25 +8,25 @@ export interface Query<TData> {
 }
 
 export function toQuery<TData>(
-  observable: Observable<TData>
+  observable: Observable<TData>,
+  retryCount = 3
 ): Observable<Query<TData>> {
+  const loadingState: Query<TData> = {
+    status: 'loading',
+  };
+
   return observable.pipe(
-    retry(3),
-    map(mapToState),
-    catchError((error) => handleError<TData>(error)),
-    startWith({
-      data: undefined,
-      status: 'loading',
-      error: undefined,
-    } as Query<TData>)
+    retry(retryCount),
+    map(dataToState),
+    catchError(handleError<TData>),
+    startWith(loadingState)
   );
 }
 
-function mapToState<TData>(data: TData) {
+function dataToState<TData>(data: TData) {
   const successState: Query<TData> = {
     data,
     status: 'success',
-    error: undefined,
   };
 
   return successState;
@@ -34,7 +34,6 @@ function mapToState<TData>(data: TData) {
 
 function handleError<TData>(error: HttpErrorResponse) {
   const errorState: Query<TData> = {
-    data: undefined,
     status: 'error',
     error: error.message,
   };
