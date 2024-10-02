@@ -40,9 +40,9 @@ import { RegionService } from './region.service';
   imports: [RouterOutlet, RouterLink, CommonModule],
 })
 export default class RegionsComponent {
-  readonly service = inject(RegionService);
+  private readonly service = inject(RegionService);
 
-  query = toSignal(this.service.loadRegionsQuery(), {
+  private readonly query = toSignal(this.service.loadRegionsQuery(), {
     initialValue: { data: [], status: 'loading', error: undefined },
   });
 
