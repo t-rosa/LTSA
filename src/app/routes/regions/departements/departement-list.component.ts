@@ -23,6 +23,21 @@ import { DepartementService } from './departement.service';
 })
 export default class DepartementListComponent {
   private readonly service = inject(DepartementService);
+
+  /* --- WITH SIGNAL INPUT --- */
+
+  //  readonly code = input('')
+
+  //  private readonly query = toSignal(
+  //    toObservable(this.code).pipe(
+  //      filter((code) => code !== null),
+  //      switchMap((code) => this.service.loadDepartementsByRegionCodeQuery(code))
+  //    ),
+  //    { initialValue: { data: [], status: 'loading', error: undefined } }
+  //  )
+
+  /* --- WITH SIGNAL INPUT --- */
+
   private readonly route = inject(ActivatedRoute);
 
   private readonly code$ = this.route.paramMap.pipe(
