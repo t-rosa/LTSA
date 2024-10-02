@@ -7,6 +7,10 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'login',
+    loadComponent: () => import('./routes/login/login.component'),
+  },
+  {
     path: 'regions',
     loadComponent: () => import('./routes/regions/region-list.component'),
     children: [
