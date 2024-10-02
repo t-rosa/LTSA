@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, startWith, switchMap } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs';
 import { DepartementService } from './departement.service';
 
 @Component({
@@ -32,15 +32,7 @@ export default class DepartementListComponent {
   private readonly query = toSignal(
     this.code$.pipe(
       filter((code) => code !== null),
-      switchMap((code) =>
-        this.service.loadDepartementsByRegionCodeQuery(code).pipe(
-          startWith({
-            data: [],
-            status: 'loading',
-            error: undefined,
-          })
-        )
-      )
+      switchMap((code) => this.service.loadDepartementsByRegionCodeQuery(code))
     ),
     { initialValue: { data: [], status: 'loading', error: undefined } }
   );
