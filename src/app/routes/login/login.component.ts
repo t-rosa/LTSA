@@ -6,15 +6,25 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [FormsModule, RouterLink],
   template: `
-    <form (ngSubmit)="handleSubmit()">
+    <form (ngSubmit)="handleSubmit()" #loginForm="ngForm">
       <div>
         <label for="email">Adresse e-mail</label>
         <input
           name="email"
           type="email"
           placeholder="Adresse e-mail"
+          minlength="3"
+          email
+          required
           [(ngModel)]="email"
+          #formEmail="ngModel"
         />
+      </div>
+      <div
+        [hidden]="formEmail.valid || formEmail.pristine"
+        class="text-red-500"
+      >
+        L&apos;adresse e-mail n&apos;est pas valide.
       </div>
       <div>
         <label for="password">Mot de passe</label>
@@ -22,11 +32,22 @@ import { RouterLink } from '@angular/router';
           name="password"
           type="password"
           placeholder="Mot de passe"
+          minlength="6"
+          required
+          #formPassword="ngModel"
           [(ngModel)]="password"
         />
       </div>
+      <div
+        [hidden]="formPassword.valid || formPassword.pristine"
+        class="text-red-500"
+      >
+        Le mot de passe n&apos;est pas valide.
+      </div>
       <div>
-        <button type="submit">Connexion</button>
+        <button type="submit" [disabled]="!loginForm.form.valid">
+          Connexion
+        </button>
         <a [routerLink]="['/']">Retour</a>
       </div>
     </form>
