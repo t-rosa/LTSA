@@ -1,5 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, map, Observable, of, retry, startWith } from 'rxjs';
+import {
+  catchError,
+  map,
+  of,
+  OperatorFunction,
+  pipe,
+  retry,
+  startWith,
+} from 'rxjs';
 
 export interface Query<TData> {
   data?: TData;
@@ -7,15 +15,14 @@ export interface Query<TData> {
   error?: string;
 }
 
-export function toQuery<TData>(
-  observable: Observable<TData>,
+export function mapQuery<TData>(
   retryCount = 3
-): Observable<Query<TData>> {
+): OperatorFunction<TData, Query<TData>> {
   const loadingState: Query<TData> = {
     status: 'loading',
   };
 
-  return observable.pipe(
+  return pipe(
     retry(retryCount),
     map(dataToState),
     catchError(handleError<TData>),

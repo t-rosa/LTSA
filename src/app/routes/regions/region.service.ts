@@ -1,4 +1,4 @@
-import { toQuery } from '@/lib/to-query';
+import { mapQuery } from '@/lib/map-query';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
@@ -15,6 +15,6 @@ export class RegionService {
   private readonly http = inject(HttpClient);
 
   loadRegionsQuery() {
-    return toQuery(this.http.get<Region[]>(this.URL));
+    return this.http.get<Region[]>(this.URL).pipe(mapQuery());
   }
 }
