@@ -1,0 +1,22 @@
+<div class="layout">
+  <aside class="aside">
+    <section class="aside__section">
+      <div>
+        <label for="opacity">Opacité</label>
+        <input
+          type="number"
+          name="opacity"
+          id="opacity"
+          min="0"
+          max="1"
+          step="0.1"
+          [defaultValue]="1"
+          (change)="handleOpacityChange($event)"
+        />
+      </div>
+    </section>
+  </aside>
+  <main class="main">
+    <div id="map"></div>
+  </main>
+</div>
