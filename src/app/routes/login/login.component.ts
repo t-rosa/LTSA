@@ -18,12 +18,10 @@ import { RouterLink } from '@angular/router';
           required
           [(ngModel)]="email"
           #formEmail="ngModel"
+          aria-invalid="true"
         />
       </div>
-      <div
-        [hidden]="formEmail.valid || formEmail.pristine"
-        class="text-red-500"
-      >
+      <div [hidden]="formEmail.valid || formEmail.pristine">
         L&apos;adresse e-mail n&apos;est pas valide.
       </div>
       <div>
@@ -38,10 +36,7 @@ import { RouterLink } from '@angular/router';
           [(ngModel)]="password"
         />
       </div>
-      <div
-        [hidden]="formPassword.valid || formPassword.pristine"
-        class="text-red-500"
-      >
+      <div [hidden]="formPassword.valid || formPassword.pristine">
         Le mot de passe n&apos;est pas valide.
       </div>
       <div>

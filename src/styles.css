@@ -1,7 +1,2 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.ng-invalid:not(form) {
-  border: 5px solid #a94442;
-}
+@import url(css/globals.css);
+@import url(css/fonts.css);

@@ -21,4 +21,8 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'map',
+    loadComponent: () => import('./routes/map/map.component'),
+  },
 ];
