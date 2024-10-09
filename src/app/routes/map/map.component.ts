@@ -1,4 +1,3 @@
-import 'ol/ol.css';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Map as OLMap, View as OLView } from 'ol';
 import { Tile as TileLayer } from 'ol/layer';
