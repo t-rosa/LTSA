@@ -1,16 +1,38 @@
 import { Component } from '@angular/core';
+import { MenuItem, NavItemComponent } from '../nav-item/nav-item.component';
 
 @Component({
   standalone: true,
   template: `<nav>
     <ul>
-      <li>A</li>
-      <li>A</li>
-      <li>A</li>
-      <li>A</li>
+      @for(menuItem of menuItems; track menuItem.label) {
+      <al-nav-item [menuItem]="menuItem" (logItem)="handleLogItem($event)">
+        {{ menuItem.href }}
+      </al-nav-item>
+      }
     </ul>
   </nav>`,
   styles: ``,
   selector: 'al-nav-bar',
+  imports: [NavItemComponent],
 })
-export class NavBarComponent {}
+export class NavBarComponent {
+  menuItems: MenuItem[] = [
+    {
+      label: 'Accueil',
+      href: '/home',
+    },
+    {
+      label: 'Carte',
+      href: '/map',
+    },
+    {
+      label: 'Régions',
+      href: '/regions',
+    },
+  ];
+
+  handleLogItem(menuItem: MenuItem) {
+    alert(menuItem.label);
+  }
+}
