@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { Map as OLMap, View as OLView } from 'ol';
 import { Tile as TileLayer } from 'ol/layer';
 import { OSM } from 'ol/source';
@@ -8,10 +15,13 @@ import { OSM } from 'ol/source';
   templateUrl: './map.component.html',
   styleUrl: './map.component.css',
 })
-export default class MapComponent implements OnInit, OnDestroy {
+export default class MapComponent implements OnDestroy, OnInit {
+  @ViewChild('mapRef', { static: true })
+  mapRef!: ElementRef<HTMLDivElement>;
+
   map = signal(new OLMap());
 
-  ngOnInit(): void {
+  ngOnInit() {
     const source = new OSM();
 
     const layer = new TileLayer({
@@ -27,7 +37,7 @@ export default class MapComponent implements OnInit, OnDestroy {
       new OLMap({
         view,
         layers: [layer],
-        target: 'map',
+        target: this.mapRef.nativeElement,
       })
     );
   }
