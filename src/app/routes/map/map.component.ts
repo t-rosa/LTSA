@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -14,6 +15,7 @@ import { OSM } from 'ol/source';
   standalone: true,
   templateUrl: './map.component.html',
   styleUrl: './map.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class MapComponent implements OnDestroy, OnInit {
   mapRef = viewChild.required<ElementRef<HTMLDivElement>>('mapRef');
