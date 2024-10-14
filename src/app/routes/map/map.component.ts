@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit,
   signal,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { Map as OLMap, View as OLView } from 'ol';
 import { Tile as TileLayer } from 'ol/layer';
@@ -16,8 +16,7 @@ import { OSM } from 'ol/source';
   styleUrl: './map.component.css',
 })
 export default class MapComponent implements OnDestroy, OnInit {
-  @ViewChild('mapRef', { static: true })
-  mapRef!: ElementRef<HTMLDivElement>;
+  mapRef = viewChild.required<ElementRef<HTMLDivElement>>('mapRef');
 
   map = signal(new OLMap());
 
@@ -37,7 +36,7 @@ export default class MapComponent implements OnDestroy, OnInit {
       new OLMap({
         view,
         layers: [layer],
-        target: this.mapRef.nativeElement,
+        target: this.mapRef().nativeElement,
       })
     );
   }
